@@ -1,0 +1,124 @@
+import { MigrationInterface, QueryRunner } from "typeorm";
+
+export class AjustesEntidades1747060343318 implements MigrationInterface {
+    name = 'AjustesEntidades1747060343318'
+
+    public async up(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP FOREIGN KEY \`FK_pagamentos_venda\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP FOREIGN KEY \`FK_74a281e471078adc518b54229fb\``);
+        await queryRunner.query(`CREATE TABLE \`itens_venda\` (\`id_item_venda\` int NOT NULL AUTO_INCREMENT, \`quantidade\` int NOT NULL, \`preco_unitario\` decimal(10,2) NOT NULL, \`preco_total\` decimal(12,2) NOT NULL, \`vendaId\` int NULL, \`produtoId\` int NULL, PRIMARY KEY (\`id_item_venda\`)) ENGINE=InnoDB`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` DROP COLUMN \`unidade\``);
+        await queryRunner.query(`ALTER TABLE \`produtos\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`produtos\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`status_pagamento\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`id_venda\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`quantidade_ovos_duzia\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`quantidade_ovos_pente\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`quantidade_outros_produtos\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`data_pagamento\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`id_cliente\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` CHANGE \`id\` \`id\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP PRIMARY KEY`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`id\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`tipo_compra\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`observacoes\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`created_at\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`updated_at\``);
+        await queryRunner.query(`ALTER TABLE \`produtos\` ADD \`preco\` decimal(10,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` ADD \`estoque\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`metodo\` varchar(50) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`status\` enum NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`vendaId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`clienteId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`total_duzias\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`total_caixas\` int NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`lucro\` decimal(12,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`clienteId\` int NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`id_cliente\` int NOT NULL PRIMARY KEY AUTO_INCREMENT`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`email\` varchar(255) NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`bairro\` varchar(100) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`status\` enum ('ativo', 'potencial', 'inativo') NOT NULL DEFAULT 'ativo'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`dia_semana\` enum ('variavel', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado', 'domingo') NOT NULL DEFAULT 'variavel'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`dezenas_padrao\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`caixas_padrao\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` CHANGE \`tipo_produto\` \`tipo_produto\` enum ('ovos', 'mel', 'outro') NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` CHANGE \`valor_pago\` \`valor_pago\` decimal(12,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` CHANGE \`valor_total\` \`valor_total\` decimal(12,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` CHANGE \`status_pagamento\` \`status_pagamento\` enum ('pago', 'pendente', 'vencido') NOT NULL DEFAULT 'pendente'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`telefone\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`telefone\` varchar(20) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`endereco\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`endereco\` text NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`resetToken\` \`resetToken\` varchar(255) NULL`);
+        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`resetTokenExpiresAt\` \`resetTokenExpiresAt\` datetime NULL`);
+        await queryRunner.query(`ALTER TABLE \`itens_venda\` ADD CONSTRAINT \`FK_0cd8254f235ecebb82255e5c288\` FOREIGN KEY (\`vendaId\`) REFERENCES \`vendas\`(\`id_venda\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`itens_venda\` ADD CONSTRAINT \`FK_a6fe7221f1c0665517635d92dbd\` FOREIGN KEY (\`produtoId\`) REFERENCES \`produtos\`(\`id_produto\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD CONSTRAINT \`FK_52263db171b7b30389b0853bb90\` FOREIGN KEY (\`vendaId\`) REFERENCES \`vendas\`(\`id_venda\`) ON DELETE SET NULL ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD CONSTRAINT \`FK_bd0047bf9b0e55572a7f23b0e2a\` FOREIGN KEY (\`clienteId\`) REFERENCES \`clientes\`(\`id_cliente\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD CONSTRAINT \`FK_3f8b029e547e9c594afd836cb45\` FOREIGN KEY (\`clienteId\`) REFERENCES \`clientes\`(\`id_cliente\`) ON DELETE CASCADE ON UPDATE NO ACTION`);
+    }
+
+    public async down(queryRunner: QueryRunner): Promise<void> {
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP FOREIGN KEY \`FK_3f8b029e547e9c594afd836cb45\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP FOREIGN KEY \`FK_bd0047bf9b0e55572a7f23b0e2a\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP FOREIGN KEY \`FK_52263db171b7b30389b0853bb90\``);
+        await queryRunner.query(`ALTER TABLE \`itens_venda\` DROP FOREIGN KEY \`FK_a6fe7221f1c0665517635d92dbd\``);
+        await queryRunner.query(`ALTER TABLE \`itens_venda\` DROP FOREIGN KEY \`FK_0cd8254f235ecebb82255e5c288\``);
+        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`resetTokenExpiresAt\` \`resetTokenExpiresAt\` datetime NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`users\` CHANGE \`resetToken\` \`resetToken\` varchar(255) NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`endereco\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`endereco\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`telefone\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`telefone\` varchar(255) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` CHANGE \`status_pagamento\` \`status_pagamento\` enum ('pago', 'nao_pago', 'vencido') NOT NULL DEFAULT ''nao_pago''`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` CHANGE \`valor_total\` \`valor_total\` decimal(10,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` CHANGE \`valor_pago\` \`valor_pago\` decimal(10,2) NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` CHANGE \`tipo_produto\` \`tipo_produto\` enum ('ovos', 'mel', 'outros') NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`caixas_padrao\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`dezenas_padrao\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`dia_semana\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`status\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`bairro\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`email\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` DROP COLUMN \`id_cliente\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`clienteId\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`lucro\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`total_caixas\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` DROP COLUMN \`total_duzias\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`clienteId\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`vendaId\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`status\``);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` DROP COLUMN \`metodo\``);
+        await queryRunner.query(`ALTER TABLE \`produtos\` DROP COLUMN \`estoque\``);
+        await queryRunner.query(`ALTER TABLE \`produtos\` DROP COLUMN \`preco\``);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`observacoes\` varchar(255) NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`tipo_compra\` enum ('recorrente', 'esporadico', 'ligar-semanal') NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD \`id\` int NOT NULL AUTO_INCREMENT`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` ADD PRIMARY KEY (\`id\`)`);
+        await queryRunner.query(`ALTER TABLE \`clientes\` CHANGE \`id\` \`id\` int NOT NULL AUTO_INCREMENT`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`id_cliente\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`data_pagamento\` date NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`quantidade_outros_produtos\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`quantidade_ovos_pente\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD \`quantidade_ovos_duzia\` int NOT NULL DEFAULT '0'`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`id_venda\` int NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD \`status_pagamento\` enum COLLATE "utf8mb4_general_ci" ('pago', 'nao_pago', 'vencido') NOT NULL`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` ADD \`updated_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` ADD \`created_at\` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6)`);
+        await queryRunner.query(`ALTER TABLE \`produtos\` ADD \`unidade\` enum ('duzia', 'pente') NULL DEFAULT 'NULL'`);
+        await queryRunner.query(`DROP TABLE \`itens_venda\``);
+        await queryRunner.query(`ALTER TABLE \`vendas\` ADD CONSTRAINT \`FK_74a281e471078adc518b54229fb\` FOREIGN KEY (\`id_cliente\`) REFERENCES \`clientes\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+        await queryRunner.query(`ALTER TABLE \`pagamentos\` ADD CONSTRAINT \`FK_pagamentos_venda\` FOREIGN KEY (\`id_venda\`) REFERENCES \`vendas\`(\`id_venda\`) ON DELETE NO ACTION ON UPDATE NO ACTION`);
+    }
+
+}
