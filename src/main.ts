@@ -45,8 +45,8 @@ Esta API foi desenvolvida utilizando **NestJS** e **TypeORM**._
       description: 'Insira o token JWT no formato: Bearer <seu_token>',
       in: 'header',
     }, 'JWT')
+    .addServer('http://localhost:3001', 'Servidor Local')
     .addServer('https://api.fazendasaopedro.appsirius.com', 'Servidor Produção')
-    .addServer('http://localhost:3085', 'Servidor Local')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api-docs', app, document);
